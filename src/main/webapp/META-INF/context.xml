@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/imei" reloadable="false" allowLinking="true">
+
+	<!-- Default set of monitored resources -->
+	<WatchedResource>WEB-INF/web.xml</WatchedResource>
+
+	<Resource driverClassName="oracle.jdbc.driver.OracleDriver"
+		logAbandoned="true" maxActive="100" maxIdle="30" maxWait="10000" name="jdbc/data1"
+		password="password" removeAbandoned="true" removeAbandonedTimeout="300"
+		type="javax.sql.DataSource" url="jdbc:oracle:thin:@192.168.0.X:1521:orcl1"
+		username="username" />
+
+</Context>

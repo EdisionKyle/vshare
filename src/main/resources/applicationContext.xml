@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+				http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+				http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+				http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
+				default-autowire="byName">
+<!-- 	<context:annotation-config />移除 -->
+	<!-- 通过component-scan 让Spring扫描com.sm.dao,com.sm.service下的所有的类，让Spring的代码注解生效 -->
+	<context:component-scan base-package="com.vnet">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath*:jdbc.properties</value>
+				<value>classpath*:redis.properties</value>
+			</list>
+		</property>
+		<property name="fileEncoding" value="UTF-8"></property>
+		<property name="ignoreResourceNotFound" value="true"></property>
+	</bean>
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="com.mysql.jdbc.Driver" />
+		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/jtee" />
+		<property name="user" value="root" />
+		<property name="password" value="tianpc" />
+		<property name="autoCommitOnClose" value="true" />
+<!-- 		<property name="checkoutTimeout" value="${cpool.checkoutTimeout}" /> -->
+<!-- 		<property name="initialPoolSize" value="${cpool.minPoolSize}" /> -->
+<!-- 		<property name="minPoolSize" value="${cpool.minPoolSize}" /> -->
+<!-- 		<property name="maxPoolSize" value="${cpool.maxPoolSize}" /> -->
+<!-- 		<property name="maxIdleTime" value="${cpool.maxIdleTime}" /> -->
+<!-- 		<property name="acquireIncrement" value="${cpool.acquireIncrement}" /> -->
+<!-- 		<property name="maxIdleTimeExcessConnections" value="${cpool.maxIdleTimeExcessConnections}" /> -->
+	</bean>
+	<!-- 构建sqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+		<property name="mapperLocations" value="classpath*:mybatis-mapper/*.xml"/>
+	</bean>
+
+	<!-- 扫描数据访问接口 注意不需要指定SqlSessionFactory -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.vnet.**.dao" />
+	</bean>
+
+	<!-- 配置事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 开启注解式事务 -->
+	<!-- <tx:annotation-driven transaction-manager="transactionManager" /> -->
+
+	<!-- 拦截器方式配置事物 -->
+	<tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="add*" propagation="REQUIRED" />
+			<tx:method name="append*" propagation="REQUIRED" />
+			<tx:method name="insert*" propagation="REQUIRED" />
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="modify*" propagation="REQUIRED" />
+			<tx:method name="edit*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="remove*" propagation="REQUIRED" />
+			<tx:method name="repair" propagation="REQUIRED" />
+			<tx:method name="delAndRepair" propagation="REQUIRED" />
+
+			<tx:method name="get*" propagation="SUPPORTS" />
+			<tx:method name="find*" propagation="SUPPORTS" />
+			<tx:method name="load*" propagation="SUPPORTS" />
+			<tx:method name="search*" propagation="SUPPORTS" />
+			<tx:method name="datagrid*" propagation="SUPPORTS" />
+
+			<tx:method name="*" propagation="SUPPORTS" />
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config>
+		<aop:pointcut id="transactionPointcut"
+			expression="execution(* com.vnet.service..*Impl.*(..))" />
+		<aop:advisor pointcut-ref="transactionPointcut"
+			advice-ref="transactionAdvice" />
+	</aop:config>
+	<!--
+	<bean id="xmlSecurityHandler" class="com.vnet.spring.aop.XmlSecurityHandler"></bean>
+	
+	<aop:config>
+		<aop:aspect id="xmlSecurityAspect" ref="xmlSecurityHandler">
+			<aop:pointcut id="anyMethod" expression="execution(* com.vnet.spring.aop.*.*(..))"/>
+			<aop:before method="beforeCheckSecurity" pointcut-ref="anyMethod"/>
+			<aop:after method="afterCheckSecurity" pointcut-ref="anyMethod"/>
+		</aop:aspect>
+	</aop:config>
+  	-->
+  	<aop:aspectj-autoproxy />
+	<!-- MQ配置信息 -->
+<!-- 	<import resource="applicationContext-mq.xml"/> -->
+
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxIdle" value="${redis.maxIdle}" />
+        <property name="maxTotal" value="${redis.maxTotal}" />
+        <property name="maxWaitMillis" value="${redis.maxWaitMillis}" />
+        <property name="testOnBorrow" value="${redis.testOnBorrow}" />
+    </bean>  
+
+    <bean id="redisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<property name="hostName" value="${redis.host}" />
+		<property name="port" value="${redis.port}" />
+		<property name="password" value="${redis.pass}" />
+		<property name="poolConfig" ref="jedisPoolConfig" />
+	</bean>
+
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+        <property name="connectionFactory" ref="redisConnectionFactory" />
+        <!-- 配置true可以使用transactional控制事务，spring已经提供支持 -->
+        <property name="enableTransactionSupport" value="true"/>
+    </bean>
+
+</beans>
