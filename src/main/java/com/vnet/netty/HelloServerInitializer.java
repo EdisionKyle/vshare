@@ -1,4 +1,4 @@
-package com.vnet.nety;
+package com.vnet.netty;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
