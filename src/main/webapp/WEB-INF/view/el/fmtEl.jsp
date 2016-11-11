@@ -16,20 +16,20 @@
 	<!--
 	JSTL格式化标签又称为I18N标签库，主要用来编写国际化的WEB应用，使用此功能可以对一个特定的语言请求做出合适的处理。
 	格式化标签
-    <fmt:fromatNumber>
-    <fmt:formatDate>
-    <fmt:parseDate>
-    <fmt:parseNumber>
-    <fmt:setTimeZone>
-    <fmt:timeZone>
+    <fmt:fromatNumber/>
+    <fmt:formatDate/>
+    <fmt:parseDate/>
+    <fmt:parseNumber/>
+    <fmt:setTimeZone/>
+    <fmt:timeZone/>
 
           国际化标签
-    <fmt:setLocale>
-    <fmt:requestEncoding>
-    <fmt:bundle>
-    <fmt:message>
-    <fmt:param>
-    <fmt:setBundle>
+    <fmt:setLocale/>
+    <fmt:requestEncoding/>
+    <fmt:bundle/>
+    <fmt:message/>
+    <fmt:param/>
+    <fmt:setBundle/>
 	-->
 	</body>
 </html>

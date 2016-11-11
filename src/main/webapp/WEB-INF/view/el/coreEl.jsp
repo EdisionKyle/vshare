@@ -20,7 +20,7 @@
 			List<String> list2 = new ArrayList<String>();
 			list2.add("aaaaaa");
 			list2.add("bbbbbb");
-			Map<String, List<String>> map = new HashMap();
+			Map<String, List<String>> map = new HashMap<String, List<String>>();
 			map.put("a", list);
 			map.put("b", list2);
 		%>
