@@ -1,0 +1,17 @@
+<html>
+<h1>标题：${name}</h1>
+<h5>时间：${date}</h5>
+<table>
+#foreach( $temp in $list )  
+  <tr><td>${loopCounter}</td><td>$temp</td></tr>  
+#end
+
+#macro(sayHello $name)
+	hello to $name world...
+#end
+#sayHello(${uname})
+<br />
+
+$numeric.toDouble(${unumber});
+</table>
+</html>

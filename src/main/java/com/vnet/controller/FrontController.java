@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,12 +22,8 @@ import com.vnet.pojo.UserInfo;
 @RequestMapping("/front")
 public class FrontController {
 
-	@Value("${jdbc.url}")
-	private String jdbcUrl;
-	
 	@RequestMapping("/toAjax")
 	public String toAjax() {
-		System.out.println(jdbcUrl);
 		return "front/ajax";
 	}
 

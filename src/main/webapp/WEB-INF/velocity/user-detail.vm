@@ -1,0 +1,76 @@
+<html> 
+<body>
+    <h3>${uname}</h3>
+    #set($nickName = "mileslone520")
+    <h2>$nickName</h1>
+    <hr />
+    Velocity 变量：变量引用, 字面字符串, 属性引用, 方法引用, 字面数字, 数组列表。
+    #**
+    #set($foo = $nickName)
+    	${foo}	<br />
+	#set($foo ="hello")
+		${foo}	<br />
+	#set($foo.name = $bar.name)
+		${foo.name}
+	#set($foo.name = $bar.getName($arg))
+		
+	#set($foo = 123)
+		${foo}
+	#set($foo = ["foo",$bar])
+	*#
+    <hr />
+    <h4>条件语句 If--ElseIf--Else--End</h4>
+    #if(${flag})
+    	${flag}是真是假
+    #elseif(${isTrue})
+    	${isTrue}是真真
+    #end
+    <hr />
+    <h4>Velocity 引擎提供了 AND、OR 和 NOT 操作符，分别对应&&、||和!</h4>
+    #if(${flag} && ${isTrue})
+    	1、flag和isTrue都是真真的。<br />
+    #end
+    #if(${flag} || ${isTrue})
+    	2、flag或isTrue是真真的。<br />
+    #end
+    #if(!${flag})
+    	3、flag是假假的。<br />
+    #end
+    <hr />
+    <h4>Velocity 中的宏可以理解为函数定义</h4>
+    #macro(sayHello $name)
+		hello to $name world...
+	#end
+	#sayHello(${uname})
+	<br />
+	##如果加上感叹号，变量不存在的情况，会隐藏不会显示，推荐使用
+	$!{unameoooo}  <span style="color:red;">变量unameoooo不存在，所以没有显示</span>
+	<hr />
+	<h4>数组的遍历(无法通过类似 arr[2]来访问特定位置的元素)</h4>
+	#set( $arr = ["one", "two", "three"] )  
+	#foreach ($ele in $arr)
+	${loopCounter}、$!{ele}<br/>
+	#end
+	<h4>列表的遍历</h4>
+	<table>
+	#foreach( $user in $users )  
+	  <tr><td>${loopCounter}</td><td>$user.name</td><td>$user.job</td></tr>  
+	  #end
+	</table>
+	<h4>哈希的遍历</h4>
+	#foreach( $key in $uinfo.keySet() )  
+  	<li>Key: $key -> Value: $uinfo.get($key)</li>  
+  	#end
+  	<hr />
+  	<h4>转义字符'\'</h4>
+  	\${nickName}
+  	<hr />
+  	<h4>parse和include引入文件</h4>
+  	#parse("header.vm") ##只能引单个文件  
+	#include("header.vm", "footer.vm") ##可以引入多个文件 
+	
+	自定义函数：$numeric.toFixedNumber(${unumber})<br />
+	$numeric.toDouble(${unumber});<br />
+	自定义标签：#constant($unumber, $nickName)
+</body>
+</html>

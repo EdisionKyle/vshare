@@ -14,23 +14,23 @@
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
 
-	<bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
-				<value>classpath*:jdbc.properties</value>
-				<value>classpath*:redis.properties</value>
+				<value>classpath:jdbc.properties</value>
+				<value>classpath:redis.properties</value>
 			</list>
 		</property>
 		<property name="fileEncoding" value="UTF-8"></property>
-		<property name="ignoreResourceNotFound" value="true"></property>
+		<property name="ignoreUnresolvablePlaceholders" value="true"></property>
 	</bean>
 
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		destroy-method="close">
-		<property name="driverClass" value="com.mysql.jdbc.Driver" />
-		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/jtee" />
-		<property name="user" value="root" />
-		<property name="password" value="tianpc" />
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
 		<property name="autoCommitOnClose" value="true" />
 <!-- 		<property name="checkoutTimeout" value="${cpool.checkoutTimeout}" /> -->
 <!-- 		<property name="initialPoolSize" value="${cpool.minPoolSize}" /> -->
@@ -41,15 +41,20 @@
 <!-- 		<property name="maxIdleTimeExcessConnections" value="${cpool.maxIdleTimeExcessConnections}" /> -->
 	</bean>
 	<!-- 构建sqlSessionFactory -->
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	<bean id="mybatisSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="configLocation" value="classpath:mybatis-config.xml" />
 		<property name="mapperLocations" value="classpath*:mybatis-mapper/*.xml"/>
 	</bean>
-
+	<!--
+		无法使用jdbc.properties的配置注入解决方法：
+		1、去掉sqlSessionFactory
+		2、使用sqlSessionFactoryBeanName而不是sqlSessionFactory
+	-->
 	<!-- 扫描数据访问接口 注意不需要指定SqlSessionFactory -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="com.vnet.**.dao" />
+		<property name="sqlSessionFactoryBeanName" value="mybatisSqlSessionFactory"></property>
 	</bean>
 
 	<!-- 配置事务管理器 -->

@@ -1,7 +1,5 @@
 package com.vnet.jms.activemq;
 
-import org.springframework.stereotype.Component;
-
 /**
  * 发送消息到mq服务器，所有客户端通用
  *
