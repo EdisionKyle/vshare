@@ -111,6 +111,7 @@
   	<aop:aspectj-autoproxy />
 	<!-- MQ配置信息 -->
 <!-- 	<import resource="applicationContext-mq.xml"/> -->
+	<import resource="applicationContext-shiro.xml"/>
 
 	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
         <property name="maxIdle" value="${redis.maxIdle}" />

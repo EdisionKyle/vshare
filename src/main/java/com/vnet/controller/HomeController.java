@@ -10,8 +10,12 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -88,7 +92,7 @@ public class HomeController {
 	// 当请求参数a不存在时会有异常发生,可以通过设置属性required=false解决,
 	// 例如: @RequestParam(value="uname", required=false)
 	@RequestMapping("/advice.do")
-	public String advice(@RequestParam("uname") String uname, String passwd,
+	public String advice(@RequestParam(value = "uname", required = false) String uname, @RequestParam(value = "passwd", required = false) String passwd,
 			Model model) {
 		System.out.println("入参:   " + uname + "   --   " + passwd);
 		model.addAttribute("uname", "milesloner'friend");
@@ -96,11 +100,41 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/login.do", method = RequestMethod.POST)
-	public String login(@ModelAttribute("user") User user, Model model) {
+	public String login(@ModelAttribute("user") User user, Model model, HttpServletRequest request) {
+		String returnView = "";
 		System.out.println("入参:   " + user.getUname() + "   --   "
 				+ user.getHobby());
 		model.addAttribute("uname", "milesloner'friend");
-		return "advice";
+//		if(StringUtils.equals("root", user.getUname()) && StringUtils.equals("tianpc", user.getHobby())) {
+//			request.getSession().setAttribute("uname", user.getUname());
+//			model.addAttribute("msg", "验证通过，登陆成功");
+//			return "advice";
+//		}
+		try{
+			UsernamePasswordToken token = new UsernamePasswordToken(user.getUname(), DigestUtils.md5Hex(user.getHobby()));
+			Subject currentUser = SecurityUtils.getSubject();
+			if (!currentUser.isAuthenticated()) {
+				// 使用shiro来验证
+				token.setRememberMe(true);
+				currentUser.login(token);// 验证角色和权限
+				model.addAttribute("msg", "验证通过，登陆成功");
+				System.out.println(user.getUname() + "验证通过 by doGetAuthenticationInfo");
+				returnView = "advice";
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			model.addAttribute("msg", "账号或密码错误");
+			returnView = "home";
+		}
+		return returnView;
+	}
+
+	@RequestMapping(value = "/logout.do", method = RequestMethod.GET)
+	public String logout(HttpServletRequest request) {
+//		request.getSession().removeAttribute("uname");
+		Subject currentUser = SecurityUtils.getSubject();
+		currentUser.logout();
+		return "home";
 	}
 
 	/*

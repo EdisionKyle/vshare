@@ -3,9 +3,7 @@ package com.vnet.pojo;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
-import com.vnet.utils.JsonDateSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class UserInfo implements Serializable {
 
@@ -49,7 +47,7 @@ public class UserInfo implements Serializable {
 		this.job = job;
 	}
 
-	@JsonSerialize(using = JsonDateSerializer.class)
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	public Date getBirth() {
 		return birth;
 	}

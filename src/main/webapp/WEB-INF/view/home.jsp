@@ -14,6 +14,7 @@
 	username:<input type="text" name="uname" /><br />
 	password:<input type="password" name="hobby"/><br />
 	<input type="submit" value="submit" />
+	<span style="color: red">${msg }</span>
 </form>
 <br />
 <a href="about.do"><span style="color: green; font-size:20px">关于我们</span></a><br />
