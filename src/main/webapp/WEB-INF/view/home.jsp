@@ -11,9 +11,9 @@
 <h2>Spring MVC学习从这里开始</h2>
 用户登录：<br />
 <form action="login.do" method="post">
-	username:<input type="text" name="uname" /><br />
-	password:<input type="password" name="hobby"/><br />
-	<input type="submit" value="submit" />
+	用户名：<input type="text" name="uname" /><br />
+	密码：<input type="password" name="hobby"/><br />
+	<input type="submit" value="登录" />
 	<span style="color: red">${msg }</span>
 </form>
 <br />

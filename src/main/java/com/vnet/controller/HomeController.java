@@ -2,6 +2,7 @@ package com.vnet.controller;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -99,6 +101,16 @@ public class HomeController {
 		return "advice";
 	}
 
+	@RequiresPermissions("user:update")
+	@ResponseBody
+	@RequestMapping(value = "/updateUser.do", method = RequestMethod.GET)
+	public Map<String, Object> updateUser() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", "10000");
+		map.put("msg", "用户更新成功");
+		return map;
+	}
+
 	@RequestMapping(value = "/login.do", method = RequestMethod.POST)
 	public String login(@ModelAttribute("user") User user, Model model, HttpServletRequest request) {
 		String returnView = "";
@@ -118,7 +130,7 @@ public class HomeController {
 				token.setRememberMe(true);
 				currentUser.login(token);// 验证角色和权限
 				model.addAttribute("msg", "验证通过，登陆成功");
-				System.out.println(user.getUname() + "验证通过 by doGetAuthenticationInfo");
+				System.out.println(user.getUname() + "验证通过 by doGetAuthenticationInfo at " + new Date());
 				returnView = "advice";
 			}
 		} catch (Exception ex) {

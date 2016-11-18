@@ -25,10 +25,14 @@ public class UserRealm extends AuthorizingRealm {
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(
 			PrincipalCollection principals) {
+		String userName = (String)principals.getPrimaryPrincipal();
+		System.out.println("资源授权-doGetAuthorizationInfo.userName：" + userName);
 		Set<String> roleNames = new HashSet<String>();
 		Set<String> permissions = new HashSet<String>();
-		roleNames.add("administrator");// 添加角色
-		permissions.add("newPage.jhtml"); // 添加权限
+		roleNames.add("administrator");
+		permissions.add("user:create");
+		permissions.add("user:update");
+		permissions.add("user:delete");
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roleNames);
 		info.setStringPermissions(permissions);
 		return info;
@@ -41,6 +45,7 @@ public class UserRealm extends AuthorizingRealm {
 	protected AuthenticationInfo doGetAuthenticationInfo(
 			AuthenticationToken authcToken) throws AuthenticationException {
 		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
+		System.out.println("登录验证-doGetAuthenticationInfo.token：" + token.getUsername());
 		if (token.getUsername().equals(USER_NAME)) {
 			return new SimpleAuthenticationInfo(USER_NAME,
 					DigestUtils.md5Hex(PASSWORD), getName());
