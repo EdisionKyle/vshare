@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>home</title>
-<link rel="shortcut icon" href="http://localhost:8080/smvc/resource/favicon.ico">
+<link rel="shortcut icon" href="/images/favicon.ico" type="images/x-icon">
 </head>
 <body>
 <h2>Spring MVC学习从这里开始</h2>
