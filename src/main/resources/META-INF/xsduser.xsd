@@ -4,7 +4,7 @@
 	targetNamespace="http://www.milesloner.com/schema/xsduser"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xsd:import namespace="http://www.springframework.org/schema/beans" />
-	<xsd:element name="xsduser">
+	<!-- <xsd:element name="xsduser">
 		<xsd:complexType>
 			<xsd:complexContent>
 				<xsd:extension base="beans:identifiedType">
@@ -13,5 +13,5 @@
 				</xsd:extension>
 			</xsd:complexContent>
 		</xsd:complexType>
-	</xsd:element>
+	</xsd:element> -->
 </xsd:schema>
